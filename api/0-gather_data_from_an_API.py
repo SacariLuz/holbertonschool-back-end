@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Script that using
+Script that using.
 https://jsonplaceholder.typicode.com/
 """
 
