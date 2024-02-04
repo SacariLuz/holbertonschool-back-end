@@ -1,28 +1,48 @@
 #!/usr/bin/python3
 """
-Script that using.
-https://jsonplaceholder.typicode.com/
+Usings API
 """
 
 import requests
 from sys import argv
 
-if __name__ == "__main__":
-    """ code not executed when imported """
-    emp = argv[1]
-    url_request = "https://jsonplaceholder.typicode.com/users/{}".format(emp)
-    url = requests.get(url_request)
-    emp_name = url.json().get('name')
-    todos = requests.get("{}/todos".format(url_request)).json()
-    done_tasks = 0
-    total = 0
-    todo_list = []
-    for task in todos:
-        total += 1
-        if task.get('completed'):
-            done_tasks += 1
-            todo_list.append(task.get("title"))
-    print("Employee {} is done with tasks:({}/{}):".format(
-            emp_name, done_tasks, total))
-    for task in todo_list:
-        print("\t {}".format(task))
+
+def main():
+    """
+    Query name and tasks of employee.
+    """
+    if len(argv) > 1 and argv[1].isdigit():
+        id = argv[1]
+
+        url_id = f"https://jsonplaceholder.typicode.com/users/{id}"
+        url_todos = f"https://jsonplaceholder.typicode.com/users/{id}/todos"
+
+        try:
+            response = requests.get(url_id)
+
+            if response.status_code == 200:
+                data = response.json()
+                EMPLOYEE_NAME = data['name']
+            response = requests.get(url_todos)
+
+            if response.status_code == 200:
+                todos = response.json()
+
+                total_task = sum(1 for todo in todos if todo["completed"])
+
+                NUMBER_OF_DONE_TASKS = total_task
+                TOTAL_NUMBER_OF_TASKS = len(todos)
+                text = f"Employee {EMPLOYEE_NAME} is done with "\
+                    f"tasks({NUMBER_OF_DONE_TASKS}/{TOTAL_NUMBER_OF_TASKS}):"
+
+                print(text)
+                for todo in todos:
+                    if todo["completed"]:
+                        print(f'\t {todo["title"]}')
+
+        except requests.exceptions.HTTPError as e:
+            print(f"Error de solictud: {e}")
+
+
+if __name__ == '__main__':
+    main()
