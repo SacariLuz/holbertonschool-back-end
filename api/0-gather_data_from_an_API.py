@@ -40,8 +40,8 @@ def main():
                     if todo["completed"]:
                         print(f'\t {todo["title"]}')
 
-        except requests.exceptions.HTTPError as e:
-            print(f"Error de solictud: {e}")
+        except requests.exceptions.HTTPError as f:
+            print(f"Error de solictud: {f}")
 
 
 if __name__ == '__main__':
