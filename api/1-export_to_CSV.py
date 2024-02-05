@@ -3,46 +3,56 @@
 Usings API
 """
 
+import csv
 import requests
 from sys import argv
-
 
 def main():
     """
     Query name and tasks of employee.
     """
-    if len(argv) > 1 and argv[1].isdigit():
+
+     if len(argv) >= 2 and argv[1].isdigit():
         id = argv[1]
 
         url_id = f"https://jsonplaceholder.typicode.com/users/{id}"
         url_todos = f"https://jsonplaceholder.typicode.com/users/{id}/todos"
 
-        try:
-            response = requests.get(url_id)
+        response = requests.get(url_id)
 
-            if response.status_code == 200:
-                data = response.json()
-                EMPLOYEE_NAME = data['name']
-            response = requests.get(url_todos)
+        if response.status_code != 200:
+            print(f"Error:username not found. Please enter an existing user id")
+            exit()
 
-            if response.status_code == 200:
-                todos = response.json()
+        data = response.json()
+        EMPLOYEE_NAME = data["username"]
 
-                total_task = sum(1 for todo in todos if todo["completed"])
+        response = requests.get(url_todos)
 
-                NUMBER_OF_DONE_TASKS = total_task
-                TOTAL_NUMBER_OF_TASKS = len(todos)
-                text = f"Employee {EMPLOYEE_NAME} is done with "\
-                    f"tasks({NUMBER_OF_DONE_TASKS}/{TOTAL_NUMBER_OF_TASKS}):"
+        if response.status_code != 200:
+            print(f"Error:username not found. Please enter an existing user id")
+            exit()
 
-                print(text)
-                for todo in todos:
-                    if todo["completed"]:
-                        print(f'\t {todo["title"]}')
+        todos = response.json()
 
-        except requests.exceptions.HTTPError as f:
-            print(f"Error de solictud: {f}")
+        all_tasks = [todo["title"] for todo in todos]
+        status_task = [todo["completed"] for todo in todos]
+        employee_todos = []
 
+        for index in range(0, len(all_tasks)):
+            record = [str(id), EMPLOYEE_NAME, str(
+                status_task[index]), all_tasks[index]]
 
-if __name__ == '__main__':
-    main()
+            employee_todos.append(record)
+
+        name_file_csv = f"{id}.csv"
+
+        with open(name_file_csv, mode="w", newline="") as f:
+            writer = csv.writer(f, quoting=csv.QUOTE_ALL)
+            writer.writerows(employee_todos)
+
+        else:
+        print("Please enter an existing user id")
+
+    if __name__ == "__main__":
+        main()
