@@ -12,7 +12,6 @@ def main():
     Query name and tasks of employee.
     """
 
-
     all_employees = {}
 
     for id in range(1, 11):
