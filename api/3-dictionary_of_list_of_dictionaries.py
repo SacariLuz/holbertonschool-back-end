@@ -7,6 +7,7 @@ from sys import argv
 import json
 import requests
 
+
 def main():
     """
     Query name and tasks of employee.
