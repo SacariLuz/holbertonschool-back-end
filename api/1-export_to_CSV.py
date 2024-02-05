@@ -12,14 +12,13 @@ def main():
     """
     Query name and tasks of employee.
     """
-    if len(argv) > 1 and argv[1].isdigit():
-        USER_ID = int(argv[1])
+    if len(argv) >= 2 and argv[1].isdigit():
+        id = argv[1]
 
     url_todos = f"https://jsonplaceholder.typicode.com/users/{id}/todos"
     url_id = f"https://jsonplaceholder.typicode.com/users/{id}"
 
-    try:
-        response = requests.get(url_id)
+    response = requests.get(url_id)
 
         if response.status_code != 200:
             print(f"Error:username not found")
@@ -27,6 +26,7 @@ def main():
 
         data = response.json()
         EMPLOYEE_NAME = data["username"]
+
         response = requests.get(url_todos)
 
         if response.status_code != 200:
@@ -45,9 +45,9 @@ def main():
 
             employee_todos.append(record)
 
-        name_file_csv = f'{id}.csv'
+        name_file_csv = f"{id}.csv"
 
-        with open(name_file_csv, mode='w', newline='') as f:
+        with open(name_file_csv, mode="w", newline="") as f:
             writer = csv.writer(f, quoting=csv.QUOTE_ALL)
             writer.writerows(employee_todos)
 
