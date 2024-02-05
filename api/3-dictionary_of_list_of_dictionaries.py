@@ -26,30 +26,30 @@ def main():
         response = requests.get(url_id)
 
         if response.status_code != 200:
-            print(f"Ups... tuvimos un problema par consultar el {id}")
+            print(f"Error:username not found. Please enter an existing user id")
             exit()
 
         data = response.json()
-        EMPLOYEE_NAME = data['username']
+        EMPLOYEE_NAME = data["username"]
 
         response = requests.get(url_todos)
 
         if response.status_code != 200:
-            print(f"Ups... tuvimos un problema par consultar el {id}")
+            print(f"Error:username not found. Please enter an existing user id")
             exit()
 
         todos = response.json()
         list_todos = []
         dict_todos = {}
 
-        all_tasks = [todo['title'] for todo in todos]
-        status_task = [todo['completed'] for todo in todos]
+        all_tasks = [todo["title"] for todo in todos]
+        status_task = [todo["completed"] for todo in todos]
 
         for index in range(0, len(all_tasks)):
             dict_todos = {
-                'username': EMPLOYEE_NAME,
-                'task': all_tasks[index],
-                'completed': status_task[index]
+                "username": EMPLOYEE_NAME,
+                "task": all_tasks[index],
+                "completed": status_task[index]
             }
 
             list_todos.append(dict_todos)
@@ -60,7 +60,7 @@ def main():
 
         name_file_json = "todo_all_employees.json"
 
-        with open(name_file_json, mode='w', newline='') as f:
+        with open(name_file_json, mode="w", newline='') as f:
             json.dump(all_employees, f, indent=4)
 
 
